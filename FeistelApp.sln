@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Feistel", "Feistel\Feistel.csproj", "{C04709C5-0F18-4AA1-A664-4B577EA2FAEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C04709C5-0F18-4AA1-A664-4B577EA2FAEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C04709C5-0F18-4AA1-A664-4B577EA2FAEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C04709C5-0F18-4AA1-A664-4B577EA2FAEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C04709C5-0F18-4AA1-A664-4B577EA2FAEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61973975-CF2E-4B9E-9AA1-D430D78383B5}
+	EndGlobalSection
+EndGlobal
