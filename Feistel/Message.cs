@@ -3,11 +3,6 @@
     public class Message : ABlock
     {
         public bool[] cipheredBlock { get; set; }
-        public bool[] roundKey { get; set; }  // key
-        public bool[] keyMsb { get; set; }  // key
-        public bool[] keyLsb { get; set; }  // key
-        public bool[] keyBlock { get; set; } // key (combinedBits)
-        public bool[] keyPreW { get; set; } // XXX
 
         public int round { get; set; }
 
@@ -17,18 +12,11 @@
             msb = new bool[4];
             lsb = new bool[4];
             cipheredBlock = new bool[8];
-            // trash below
-            roundKey = new bool[4];
-            keyMsb = new bool[4];
-            keyLsb = new bool[4];
-            keyBlock = new bool[8];
-            keyPreW = new bool[8];
-            round = 0;
         }
 
         // implementation
 
-        public void SFunctionBox()
+        public void SFunctionBox(bool[] key)
         {
             // lsb
             bool x1, x2, x3, x4;
@@ -38,10 +26,10 @@
             x4 = lsb[3];
             // round key
             bool k1, k2, k3, k4;
-            k1 = roundKey[0];
-            k2 = roundKey[1];
-            k3 = roundKey[2];
-            k4 = roundKey[3];
+            k1 = key[0];
+            k2 = key[1];
+            k3 = key[2];
+            k4 = key[3];
 
             // f1
             bool r1 = x1 ^ (x1 && x3) ^ (x2 && x4) ^ (x2 && x3 && x4) ^ (x1 && x2 && x3 && x4) ^ k1;

@@ -1,7 +1,9 @@
-﻿using CipheringApp;
-using System.Threading.Tasks.Dataflow;
-
-
+﻿/*
+ * ******************************
+ * klucze od rundy 3 się pierdolą
+ * ******************************
+ */
+using CipheringApp;
 internal class Program
 {
     internal static void Main(string[] args)

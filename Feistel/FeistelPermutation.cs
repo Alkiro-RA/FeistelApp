@@ -1,9 +1,8 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+ * ******************************
+ * klucze od rundy 3 się pierdolą
+ * ******************************
+ */
 
 namespace CipheringApp
 {
@@ -19,15 +18,15 @@ namespace CipheringApp
         {
             // wprowadź 8-bitowy blok 
             Console.WriteLine("Tworzenie wiadomości");
-            var messageBlock = new Message(Program.GetInput());
+            var message = new Message(Program.GetInput());
             Console.WriteLine("Tworzenie klucza");
-            var keyBlock = new Key(Program.GetInput());
-            // zapisz input do programu
-            key = keyBlock.input;
-            message = messageBlock.input;
+            var key = new Key(Program.GetInput());
+            // zapisz input w pamięci programu
+            FeistelPermutation.key = key.input;
+            FeistelPermutation.message = message.input;
             // podziel key i message na 2 części (msb, lsb)
-            messageBlock.DivideBlock();
-            keyBlock.DivideBlock();
+            message.DivideBlock();
+            key.DivideBlock();
             // rozpocznij permutacje
             while (round < 8)
             {
@@ -35,59 +34,106 @@ namespace CipheringApp
                 if (round % 2 == 0)
                 {
                     // przesuń bit o 1 w lewo dla kmsb i klsb
-                    keyBlock.msb = keyBlock.MoveBit(keyBlock.msb);
-                    keyBlock.lsb = keyBlock.MoveBit(keyBlock.lsb);
+                    key.msb = key.MoveBit(key.msb);
+                    key.lsb = key.MoveBit(key.lsb);
                     // aktualizuj wartość combinedBits
-                    keyBlock.UpdateCombinedBits();
+                    key.UpdateCombinedBits();
                 }
                 else
                 {
                     // przesuń bit o 1 w lewo dla combinedBits
-                    keyBlock.combinedBits = keyBlock.MoveBit(keyBlock.combinedBits);
+                    key.combinedBits = key.MoveBit(key.combinedBits);
                     // aktualizuj wartość kmsb i klsb
-                    keyBlock.UpdateMsbLsb();
+                    key.UpdateMsbLsb();
                 }
                 // zaleźnie od rundy ustaw wartość preRoundKey na podstawie key msb/lsb lub combinedBits
                 if (round % 2 == 0)
                 {
-                    keyBlock.CreatePreRoundKeyWithMsbLsb();
+                    key.CreatePreRoundKeyWithMsbLsb();
                 }
                 else
                 {
-                    keyBlock.CreatePreRoundKeyWithCombinedBits();
+                    key.CreatePreRoundKeyWithCombinedBits();
                 }
                 // utwórz roundKey na podstawie keyPreW
-                keyBlock.SetRoundKey();
-                // zapisz klucz rundy do programu
-                keys[round] = keyBlock.roundKey;
+                key.SetRoundKey();
+                // zapisz klucz rundy w pamięci programu
+                SaveKey(key.roundKey, round);
                 // przejdź lsb przez f(S)
-                messageBlock.SFunctionBox();
+                message.SFunctionBox(key.roundKey);
                 // wykonaj XOR dla msb i lsb
-                messageBlock.XORMsbLsb();
+                message.XORMsbLsb();
                 // na ostatniej rundzie nie swapuj
                 if (round != 7)
                 {
                     // Zamień miejscem lsb z msb
-                    messageBlock.Swap();
+                    message.Swap();
                     round++;
                 }
                 else
                 {
                     // złóż blok do kupy
-                    messageBlock.GetFinalBlock();
+                    message.GetFinalBlock();
                     round++;
                 }
             }
             round = 0;
             Console.WriteLine("Wiadomość po zaszyfrowaniu:");
-            ABlock.Show(messageBlock.cipheredBlock);
+            ABlock.Show(message.cipheredBlock);
+            cipheredMessage = message.cipheredBlock;
         }
 
-        // not implemented yet
+
         static internal void decypherMessage()
         {
-            throw new NotImplementedException();
+            if (cipheredMessage == null)
+            {
+                Console.WriteLine("Nie zaszyfrowałeś wiadomości");
+                return;
+            }
+            // starts from here
+            round = 8;
+            var cipher = new Message(cipheredMessage);
+            cipher.DivideBlock();
+            while (round > 0)
+            {
+                // przejdź lsb przez f(S)
+                cipher.SFunctionBox(keys[round - 1]);
+                // wykonaj XOR dla msb i lsb
+                cipher.XORMsbLsb();
+                // na ostatniej rundzie nie swapuj
+                if (round != 1)
+                {
+                    // Zamień miejscem lsb z msb
+                    cipher.Swap();
+                    round--;
+                }
+                else
+                {
+                    // złóż blok do kupy
+                    cipher.GetFinalBlock();
+                    round--;
+                }
+            }
+            Console.WriteLine("Odszyfrowana wiadomość:");
+            ABlock.Show(cipher.cipheredBlock);
         }
+
+        private static void SaveKey(bool[] key, int round)
+        {
+            keys[round] = new bool[key.Length];
+            for (int i = 0; i < key.Length; i++)
+            {
+                keys[round][i] = key[i];
+            }
+        }
+
+        private static void phaseOne()
+        { }
+
+        private static void phaseTwo()
+        { }
+
 
         // algorithm methods ???
     }
