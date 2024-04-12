@@ -13,6 +13,7 @@ namespace CipheringApp
         static bool[]? message;
         static bool[]? cipheredMessage;
         static int round = 0;
+        static int maxRound = 4;
 
         static internal void cypherMessage()
         {
@@ -28,7 +29,7 @@ namespace CipheringApp
             message.DivideBlock();
             key.DivideBlock();
             // rozpocznij permutacje
-            while (round < 8)
+            while (round < maxRound)
             {
                 // przygotuj klucz do rundy
                 if (round % 2 == 0)
@@ -38,6 +39,8 @@ namespace CipheringApp
                     key.lsb = key.MoveBit(key.lsb);
                     // aktualizuj wartość combinedBits
                     key.UpdateCombinedBits();
+                    // ustaw wartość preRoundKey na podstawie key msb/lsb
+                    key.CreatePreRoundKeyWithMsbLsb();
                 }
                 else
                 {
@@ -45,17 +48,10 @@ namespace CipheringApp
                     key.combinedBits = key.MoveBit(key.combinedBits);
                     // aktualizuj wartość kmsb i klsb
                     key.UpdateMsbLsb();
-                }
-                // zaleźnie od rundy ustaw wartość preRoundKey na podstawie key msb/lsb lub combinedBits
-                if (round % 2 == 0)
-                {
-                    key.CreatePreRoundKeyWithMsbLsb();
-                }
-                else
-                {
+                    // ustaw wartość preRoundKey na podstawie combinedBits
                     key.CreatePreRoundKeyWithCombinedBits();
                 }
-                // utwórz roundKey na podstawie keyPreW
+                // utwórz roundKey na podstawie keyRoundKey
                 key.SetRoundKey();
                 // zapisz klucz rundy w pamięci programu
                 SaveKey(key.roundKey, round);
@@ -64,7 +60,7 @@ namespace CipheringApp
                 // wykonaj XOR dla msb i lsb
                 message.XORMsbLsb();
                 // na ostatniej rundzie nie swapuj
-                if (round != 7)
+                if (round != maxRound - 1)
                 {
                     // Zamień miejscem lsb z msb
                     message.Swap();
@@ -91,8 +87,8 @@ namespace CipheringApp
                 Console.WriteLine("Nie zaszyfrowałeś wiadomości");
                 return;
             }
-            // starts from here
-            round = 8;
+            // starts here
+            round = maxRound;
             var cipher = new Message(cipheredMessage);
             cipher.DivideBlock();
             while (round > 0)
@@ -127,14 +123,5 @@ namespace CipheringApp
                 keys[round][i] = key[i];
             }
         }
-
-        private static void phaseOne()
-        { }
-
-        private static void phaseTwo()
-        { }
-
-
-        // algorithm methods ???
     }
 }

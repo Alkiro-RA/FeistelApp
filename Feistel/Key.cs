@@ -74,7 +74,7 @@ namespace CipheringApp
                 }
                 else
                 {
-                    msb[i - 4] = combinedBits[i];
+                    lsb[i - 4] = combinedBits[i];
                 }
             }
         }
