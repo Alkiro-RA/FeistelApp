@@ -47,7 +47,7 @@
             lsb[3] = r4;
         }
 
-        public void XORMsbLsb()
+        public void msbXOR()
         {
             // msb
             bool x1, x2, x3, x4;

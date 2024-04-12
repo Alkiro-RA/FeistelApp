@@ -1,9 +1,4 @@
-﻿/*
- * ******************************
- * klucze od rundy 3 się pierdolą
- * ******************************
- */
-using CipheringApp;
+﻿using CipheringApp;
 internal class Program
 {
     internal static void Main(string[] args)
@@ -37,12 +32,12 @@ internal class Program
             {
                 case 1:
                     {
-                        FeistelPermutation.cypherMessage();
+                        FeistelPermutation.Permutate(false);
                         break;
                     }
                 case 2:
                     {
-                        FeistelPermutation.decypherMessage();
+                        FeistelPermutation.Permutate(true);
                         break;
                     }
                 case 3:
